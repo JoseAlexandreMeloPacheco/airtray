@@ -1,0 +1,21 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Entrar no Elgin Air" Width="390" Height="640" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#151C20" Foreground="#E4EDF1" FontFamily="Segoe UI">
+ <Window.Resources>
+  <Style TargetType="TextBox"><Setter Property="Background" Value="#222D33"/><Setter Property="Foreground" Value="#EEF5F8"/><Setter Property="BorderBrush" Value="#455762"/><Setter Property="Padding" Value="10"/><Setter Property="FontSize" Value="14"/></Style>
+  <Style TargetType="PasswordBox"><Setter Property="Background" Value="#222D33"/><Setter Property="Foreground" Value="#EEF5F8"/><Setter Property="BorderBrush" Value="#455762"/><Setter Property="Padding" Value="10"/><Setter Property="FontSize" Value="14"/></Style>
+  <Style TargetType="Button"><Setter Property="Background" Value="#9BD2E5"/><Setter Property="Foreground" Value="#101B22"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="14,11"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Cursor" Value="Hand"/></Style>
+ </Window.Resources>
+ <Border Background="#151C20" Padding="26"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel><TextBlock Text="Sua conta Elgin Air" FontSize="25" FontWeight="Light"/><TextBlock Text="Use a mesma conta do aplicativo do celular." FontSize="12" Foreground="#A7BEC9" Margin="0,7,0,22"/></StackPanel>
+  <StackPanel Grid.Row="1">
+   <TextBlock Text="E-mail ou telefone" Margin="0,0,0,7"/><TextBox x:Name="Username"/>
+   <TextBlock Text="Senha" Margin="0,17,0,7"/><PasswordBox x:Name="Password"/>
+   <TextBlock Text="Região da conta" Margin="0,17,0,7"/>
+   <ComboBox x:Name="Region" SelectedIndex="1" Padding="8" FontSize="13"><ComboBoxItem Content="Mainland / China"/><ComboBoxItem Content="Américas / Brasil"/><ComboBoxItem Content="Europa"/></ComboBox>
+   <TextBlock Text="A conta salva fica no Gerenciador de Credenciais do Windows. Entrar pode encerrar a sessão no celular." TextWrapping="Wrap" Foreground="#9DB2BE" FontSize="11" Margin="0,14,0,14"/>
+   <Button x:Name="SignIn" Content="Entrar na minha conta"/>
+   <TextBlock x:Name="LoginStatus" Text="" TextWrapping="Wrap" FontSize="12" Foreground="#AACDDD" Margin="0,14,0,0"/>
+  </StackPanel>
+  <TextBlock Grid.Row="2" Text="Conexão direta com os servidores Elgin Air/BroadLink.&#10;Os ajustes são confirmados no aparelho." Foreground="#809AA8" FontSize="10" TextWrapping="Wrap" Margin="0,12,0,0"/>
+ </Grid></Border>
+</Window>

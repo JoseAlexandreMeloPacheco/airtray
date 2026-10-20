@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>AirTray</AssemblyName>
+    <RootNamespace>ElginTray</RootNamespace>
+    <Version>0.3.0</Version>
+    <Authors>José Alexandre Melo Pacheco</Authors>
+    <Copyright>Copyright © 2026 José Alexandre Melo Pacheco</Copyright>
+    <Description>Independent experimental Windows tray controller for compatible Elgin Air devices.</Description>
+    <PackageProjectUrl>https://github.com/JoseAlexandreMeloPacheco</PackageProjectUrl>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Page Remove="Panel.xaml"/><EmbeddedResource Include="Panel.xaml"/>
+    <Page Remove="LoginPanel.xaml"/><EmbeddedResource Include="LoginPanel.xaml"/>
+    <EmbeddedResource Include="Assets/air-states-transparent.png"/>
+  </ItemGroup>
+</Project>
