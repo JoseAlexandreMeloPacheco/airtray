@@ -12,6 +12,20 @@ Created by **[José Alexandre Melo Pacheco](https://github.com/JoseAlexandreMelo
 
 Screenshots use synthetic test data, not another person's account or appliance.
 
+## Before you start: connect the AC to Wi-Fi and your account
+
+**Your air conditioner must be connected to a Wi-Fi network with internet access and linked to the same Elgin Air account you will use in AirTray.**
+
+1. Configure Wi-Fi and add the appliance to your account using the **Elgin Air** phone app.
+2. Make sure the appliance appears online and you can control it from the phone app.
+3. Then sign in to AirTray with **the same account and the correct account region**. Your computer also needs internet access.
+
+AirTray uses devices already registered to that account. It does not perform initial pairing or configure the appliance's Wi-Fi.
+
+📺 [Suggested setup video for connecting the AC to Wi-Fi and the app](https://www.youtube.com/watch?v=a8oWKxC60GU)
+
+If the appliance is missing, first check that it is online in Elgin Air and that you selected the correct account and region. Initial setup does not expand this project's supported model list.
+
 ## Download and use
 
 1. Download the experimental `AirTray-0.3.0-windows-x64.zip` from [Releases](https://github.com/JoseAlexandreMeloPacheco/airtray/releases) when available.

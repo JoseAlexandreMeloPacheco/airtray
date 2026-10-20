@@ -12,6 +12,20 @@ Criado por **[José Alexandre Melo Pacheco](https://github.com/JoseAlexandreMelo
 
 As imagens acima foram geradas com dados de teste; não mostram uma conta ou aparelho de terceiros.
 
+## Antes de usar: conecte o ar ao Wi-Fi e à sua conta
+
+**O ar-condicionado precisa estar conectado a uma rede Wi-Fi com internet e vinculado à mesma conta Elgin Air que você usará no AirTray.**
+
+1. Configure o Wi-Fi e adicione o aparelho à sua conta pelo aplicativo **Elgin Air** no celular.
+2. Confirme que o aparelho aparece online e que você consegue controlá-lo pelo aplicativo do celular.
+3. Depois, entre no AirTray com **a mesma conta e a região correta**. O computador também precisa ter acesso à internet.
+
+O AirTray usa os aparelhos já cadastrados nessa conta. Ele não faz o pareamento inicial nem configura o Wi-Fi do ar.
+
+📺 [Vídeo indicado para ajudar na configuração do ar no Wi-Fi e no aplicativo](https://www.youtube.com/watch?v=a8oWKxC60GU)
+
+Se o aparelho não aparecer, confira primeiro se ele está online no Elgin Air e se você entrou na conta e região corretas. A configuração inicial não altera a lista de modelos compatíveis com este projeto.
+
 ## Baixar e usar
 
 1. Em [Releases](https://github.com/JoseAlexandreMeloPacheco/airtray/releases), baixe o pacote experimental `AirTray-0.3.0-windows-x64.zip` quando disponível.
