@@ -28,7 +28,7 @@ Se o aparelho não aparecer, confira primeiro se ele está online no Elgin Air e
 
 ## Baixar e usar
 
-1. Em [Releases](https://github.com/JoseAlexandreMeloPacheco/airtray/releases), baixe o pacote experimental `AirTray-0.3.0-windows-x64.zip` quando disponível.
+1. Em [Releases](https://github.com/JoseAlexandreMeloPacheco/airtray/releases), baixe o pacote experimental `AirTray-0.3.1-windows-x64.zip` quando disponível.
 2. Instale o **.NET Desktop Runtime 10 x64**, extraia o ZIP inteiro e abra `AirTray.exe` no Windows x64. O executável não é assinado digitalmente.
 3. Entre com **sua própria conta Elgin Air** e escolha a região do cadastro. A região não é necessariamente o país onde você mora; algumas contas brasileiras usam Mainland/China.
 4. Havendo vários aparelhos compatíveis, escolha o que deseja controlar. Para trocar depois, abra o menu de contexto de **Minha conta**.

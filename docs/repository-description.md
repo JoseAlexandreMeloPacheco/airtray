@@ -10,7 +10,7 @@ About: Controle real de ar compatível no Windows / Real compatible AC control o
 
 Topics: `csharp` `dotnet` `wpf` `windows` `system-tray` `air-conditioner` `reverse-engineering`
 
-## v0.3.0 — experimental prerelease
+## v0.3.1 — experimental prerelease
 
 PT: Controle real com conta própria; família c0620000. Requer Windows x64 e .NET Desktop Runtime 10 x64. Extraia o ZIP e execute AirTray.exe. Consulte README e THIRD_PARTY antes de usar. Sem conta ou senha compartilhada. Não há garantia de suporte a todos os modelos; sem autorização de distribuição confirmada pelo fabricante. Aplicativo não assinado digitalmente.
 

@@ -15,6 +15,6 @@ try {
     $expected = @('AirTray.exe','AirTray.dll','AirTray.deps.json','AirTray.runtimeconfig.json') + $documentation
     $actual = @(Get-ChildItem -LiteralPath $releaseDir -File -Recurse | ForEach-Object { $_.FullName.Substring($releaseDir.Length+1).Replace('\','/') })
     if (@($actual | Where-Object { $_ -notin $expected }).Count -ne 0 -or @($expected | Where-Object { $_ -notin $actual }).Count -ne 0) { throw 'Release file list mismatch; inspect before packaging.' }
-    Compress-Archive -Path (Join-Path $releaseDir '*') -DestinationPath ./artifacts/release/AirTray-0.3.0-windows-x64.zip -Force
-    Get-FileHash ./artifacts/release/AirTray-0.3.0-windows-x64.zip -Algorithm SHA256
+    Compress-Archive -Path (Join-Path $releaseDir '*') -DestinationPath ./artifacts/release/AirTray-0.3.1-windows-x64.zip -Force
+    Get-FileHash ./artifacts/release/AirTray-0.3.1-windows-x64.zip -Algorithm SHA256
 } finally { Pop-Location }

@@ -23,6 +23,9 @@ internal sealed class TrayPanel : IDisposable
     readonly Window window;
     DeviceState? state;
     bool busy, updating, connected, exiting;
+    int? requestedTemperature;
+    int? sendingTemperature;
+    readonly DispatcherTimer temperatureTimer = new() { Interval = TimeSpan.FromMilliseconds(400) };
     Window? loginWindow;
     Forms.NotifyIcon? tray;
     DispatcherTimer? timer;
@@ -56,6 +59,18 @@ internal sealed class TrayPanel : IDisposable
             if(window.IsVisible || exiting) throw new InvalidOperationException("Fechar encerrou o aplicativo ou não ocultou o painel.");
             Show(); if(!window.IsVisible) throw new InvalidOperationException("O painel não reabriu após fechar.");
             window.Hide();
+            for(int click=0;click<3;click++) Button("MinusButton").RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+            if(requestedTemperature!=230 || state.Value("temp")!=260) throw new InvalidOperationException("Cliques rápidos não acumulam ou alteram estado confirmado.");
+            requestedTemperature=null; sendingTemperature=230; busy=true; ApplyState();
+            if(!Element<UIElement>("TempControls").IsEnabled) throw new InvalidOperationException("Temperatura bloqueada durante envio.");
+            Button("MinusButton").RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+            if(requestedTemperature!=220) throw new InvalidOperationException("Clique durante envio perdeu a temperatura desejada.");
+            Element<Slider>("TemperatureSlider").Value=19;
+            if(requestedTemperature!=190) throw new InvalidOperationException("Barra não registra temperatura desejada.");
+            RequestTemperature(150); if(requestedTemperature!=160) throw new InvalidOperationException("Limite mínimo inválido.");
+            RequestTemperature(330); if(requestedTemperature!=320) throw new InvalidOperationException("Limite máximo inválido.");
+            temperatureTimer.Stop(); requestedTemperature=null; sendingTemperature=null; busy=false;
+            Console.WriteLine("PASS: cliques de 1°C acumulados, cliques durante envio, barra, limites e estado confirmado preservado. Sem rede.");
             Console.WriteLine("PASS: imagens ligada/desligada, recolhimento, fechamento sem encerrar e reabertura. Teste offline, sem acesso à conta ou ao ar.");
             return;
         }
@@ -134,16 +149,18 @@ internal sealed class TrayPanel : IDisposable
             catch(Exception) { Message("Projeto: github.com/JoseAlexandreMeloPacheco/airtray"); }
         };
         Button("PowerButton").Click += async (_,_) => { if(state != null) await Set("pwr",state.Power ? 0 : 1); };
-        Button("MinusButton").Click += async (_,_) => { if(state != null) await Set("temp",Math.Max(160,state.Value("temp")-10)); };
-        Button("PlusButton").Click += async (_,_) => { if(state != null) await Set("temp",Math.Min(320,state.Value("temp")+10)); };
+        temperatureTimer.Tick += async (_,_) => { temperatureTimer.Stop(); await FlushTemperature(); };
+        Button("MinusButton").Click += (_,_) => RequestTemperature((requestedTemperature ?? sendingTemperature ?? state?.Value("temp") ?? 260)-10);
+        Button("PlusButton").Click += (_,_) => RequestTemperature((requestedTemperature ?? sendingTemperature ?? state?.Value("temp") ?? 260)+10);
         var slider = Element<Slider>("TemperatureSlider");
         async Task SetSlider()
         {
-            if(updating || busy || !connected || state == null) return;
+            if(updating || !connected || state == null) return;
             var target = (int)Math.Round(slider.Value,MidpointRounding.AwayFromZero)*10;
-            if(target != state.Value("temp")) await Set("temp",target);
+            RequestTemperature(target);
+            await Task.CompletedTask;
         }
-        slider.PreviewMouseLeftButtonUp += async (_,_) => await SetSlider();
+        slider.ValueChanged += async (_,_) => await SetSlider();
         slider.KeyUp += async (_,e) => { if(e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.PageUp or Key.PageDown or Key.Home or Key.End) await SetSlider(); };
         Menu("ModeButton","ac_mode",new[]{"Frio","Quente","Seco","Ventilar","Auto"});
         Menu("FanButton","ac_mark",new[]{"Auto","Baixo","Médio","Alto","Turbo","Silencioso"});
@@ -187,6 +204,25 @@ internal sealed class TrayPanel : IDisposable
         button.Click += (_,_) => { if(connected && !busy) { menu.PlacementTarget = button; menu.IsOpen = true; } };
     }
     Task Toggle(string property) => state != null && state.Has(property) ? Set(property,state.Value(property)==0 ? 1 : 0) : Task.CompletedTask;
+    void RequestTemperature(int value)
+    {
+        if(!connected || state==null || state.Has("tempunit") && state.Value("tempunit")!=1) return;
+        requestedTemperature=Math.Clamp(value,160,320);
+        ApplyState();
+        Message("Temperatura desejada: " + requestedTemperature.Value/10 + "°C · aguardando envio.");
+        temperatureTimer.Stop(); temperatureTimer.Start();
+    }
+    async Task FlushTemperature()
+    {
+        if(busy) { temperatureTimer.Start(); return; }
+        if(!connected || state==null) { requestedTemperature=null; ApplyState(); return; }
+        var target=requestedTemperature;
+        requestedTemperature=null;
+        sendingTemperature=target;
+        try { if(target.HasValue) await Set("temp",target.Value); }
+        finally { sendingTemperature=null; if(!connected) requestedTemperature=null; ApplyState(); }
+        if(requestedTemperature.HasValue) { temperatureTimer.Stop(); temperatureTimer.Start(); }
+    }
     async Task Set(string property,int value)
     {
         if(!connected || state == null || !state.Has(property) || busy) return;
@@ -243,7 +279,7 @@ internal sealed class TrayPanel : IDisposable
         {
             var ready = connected && !busy && state != null;
             var celsius = state == null || !state.Has("tempunit") || state.Value("tempunit") == 1;
-            Element<UIElement>("TempControls").IsEnabled = ready && celsius;
+            Element<UIElement>("TempControls").IsEnabled = connected && state!=null && celsius;
             Element<UIElement>("FeatureControls").IsEnabled = ready;
             Button("PowerButton").IsEnabled = ready;
             Button("EcoButton").IsEnabled = ready && state!.Has("ecomode");
@@ -253,7 +289,7 @@ internal sealed class TrayPanel : IDisposable
             foreach(var pair in new[]{("ModeButton","ac_mode"),("FanButton","ac_mark"),("SleepButton","ac_slp"),("SwingButton","ac_vdir")}) Button(pair.Item1).IsEnabled = ready && state!.Has(pair.Item2);
             Text("TemperatureText").Text = state?.Temperature.ToString("0.#",CultureInfo.GetCultureInfo("pt-BR")) ?? "—";
             Text("TemperatureUnit").Text = celsius ? "°C" : "°F";
-            if(state != null && celsius) Element<Slider>("TemperatureSlider").Value = Math.Clamp(state.Temperature,16,32);
+            if(state != null && celsius) Element<Slider>("TemperatureSlider").Value = Math.Clamp((requestedTemperature ?? sendingTemperature ?? state.Value("temp"))/10d,16,32);
             Text("ConnectionText").Text = busy ? "Conectando…" : connected ? state!.Power ? "Ligado" : "Desligado" : "Sem conexão";
             Text("Footer").Text = connected ? "●  Conectado · " + state!.Updated.ToString("HH:mm:ss") : state != null ? "○  Última leitura · " + state.Updated.ToString("HH:mm:ss") : "○  Aguardando conexão";
             Text("ModeText").Text = Label("ac_mode",new[]{"Frio","Quente","Seco","Ventilar","Auto"});
@@ -354,5 +390,5 @@ internal sealed class TrayPanel : IDisposable
         var encoder=new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(bitmap));
         using var file=File.Create(path); encoder.Save(file);
     }
-    public void Dispose() { exiting=true; timer?.Stop(); tray?.Dispose(); artwork.Dispose(); cloud.Dispose(); }
+    public void Dispose() { exiting=true; temperatureTimer.Stop(); timer?.Stop(); tray?.Dispose(); artwork.Dispose(); cloud.Dispose(); }
 }

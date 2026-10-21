@@ -28,7 +28,7 @@ If the appliance is missing, first check that it is online in Elgin Air and that
 
 ## Download and use
 
-1. Download the experimental `AirTray-0.3.0-windows-x64.zip` from [Releases](https://github.com/JoseAlexandreMeloPacheco/airtray/releases) when available.
+1. Download the experimental `AirTray-0.3.1-windows-x64.zip` from [Releases](https://github.com/JoseAlexandreMeloPacheco/airtray/releases) when available.
 2. Install **.NET Desktop Runtime 10 x64**, extract the entire ZIP, and open `AirTray.exe` on Windows x64. The executable is not digitally signed.
 3. Sign in with **your own Elgin Air account** and choose the account region. It may differ from your country of residence; some Brazilian accounts use Mainland/China.
 4. Select an appliance if multiple compatible devices are found. To switch later, use the **Minha conta** context menu.
